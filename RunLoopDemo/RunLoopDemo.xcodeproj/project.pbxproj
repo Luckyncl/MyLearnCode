@@ -15,6 +15,7 @@
 		183695A91FB05F60009673FF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 183695A81FB05F60009673FF /* main.m */; };
 		183695B31FB05F61009673FF /* RunLoopDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 183695B21FB05F61009673FF /* RunLoopDemoTests.m */; };
 		183695BE1FB05F61009673FF /* RunLoopDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 183695BD1FB05F61009673FF /* RunLoopDemoUITests.m */; };
+		189930FA1FB979180010EDF7 /* RunLoopTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 189930F91FB979180010EDF7 /* RunLoopTool.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,8 @@
 		183695B91FB05F61009673FF /* RunLoopDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunLoopDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		183695BD1FB05F61009673FF /* RunLoopDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunLoopDemoUITests.m; sourceTree = "<group>"; };
 		183695BF1FB05F61009673FF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		189930F81FB979180010EDF7 /* RunLoopTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RunLoopTool.h; sourceTree = "<group>"; };
+		189930F91FB979180010EDF7 /* RunLoopTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = RunLoopTool.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -105,6 +108,8 @@
 				1836959A1FB05F60009673FF /* AppDelegate.m */,
 				1836959C1FB05F60009673FF /* ViewController.h */,
 				1836959D1FB05F60009673FF /* ViewController.m */,
+				189930F81FB979180010EDF7 /* RunLoopTool.h */,
+				189930F91FB979180010EDF7 /* RunLoopTool.m */,
 				1836959F1FB05F60009673FF /* Main.storyboard */,
 				183695A21FB05F60009673FF /* Assets.xcassets */,
 				183695A41FB05F60009673FF /* LaunchScreen.storyboard */,
@@ -266,6 +271,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				1836959E1FB05F60009673FF /* ViewController.m in Sources */,
+				189930FA1FB979180010EDF7 /* RunLoopTool.m in Sources */,
 				183695A91FB05F60009673FF /* main.m in Sources */,
 				1836959B1FB05F60009673FF /* AppDelegate.m in Sources */,
 			);
@@ -431,7 +437,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5836W9K38T;
 				INFOPLIST_FILE = RunLoopDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinnuojiayin.RunLoopDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -444,7 +452,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 5836W9K38T;
 				INFOPLIST_FILE = RunLoopDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.jinnuojiayin.RunLoopDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
