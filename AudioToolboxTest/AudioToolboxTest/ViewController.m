@@ -7,7 +7,7 @@
 //     http://www.cocoachina.com/ios/20170721/19969.html
 // https://developer.apple.com/documentation/audiotoolbox/audio_file_services?language=objc
 // http://www.cocoachina.com/industry/20140722/9216.html
-
+// http://yoferzhang.com/post/20160811OCMemoryManagement/
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "NSString+encode.h"
@@ -34,16 +34,35 @@
    
 
 //  测试音频.m4a      1538048 有效帧数  一共所有的帧数1541120
-   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"441" ofType:@"mp3"];
+//   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"441" ofType:@"mp3"];
 
-//   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"测试音频" ofType:@"m4a"];
+   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"测试音频" ofType:@"aac"];
    NSURL *mp3Url = [NSURL URLWithString:[mp3Path stringByURLEncode]];
-    
-//   mp3Url = [NSURL URLWithString:[@"/Users/luckyncl/Desktop/测试音频.m4a" stringByURLEncode]];
+//    NSURL *mp3Url = nil;
+//   mp3Url = [NSURL fileURLWithPath:[@"/Users/Apple/Desktop/测试音.m4a" stringByURLEncode]];
 
-//   NSData *mp3Data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:mp3Path]];
-    
-   CFURLRef mp3UrlRef = (__bridge CFURLRef)mp3Url;
+
+
+   NSData *mp3Data = [NSData dataWithContentsOfURL:[NSURL fileURLWithPath:mp3Path]];
+
+    NSString *documentsFolder = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)
+                                 objectAtIndex:0];
+    NSString *filePath = [documentsFolder stringByAppendingPathComponent:@"Recording.aac"];
+
+   BOOL isSuccess = [mp3Data writeToFile:filePath atomically:YES];
+
+    if (!isSuccess) {
+        NSLog(@"不能写入");
+    }
+
+    if (![[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
+        NSLog(@"文件不存在");
+        return;
+    }
+
+
+
+   CFURLRef mp3UrlRef = (__bridge CFURLRef)[NSURL URLWithString:filePath];
 
     
 #pragma mark- 创建文件
@@ -52,32 +71,39 @@
     //如果要创建的文件是压缩格式，则可以将inStreamDesc参数中的采样率设置为0.在所有情况下，扩展文件对象的编码转换器可能会以不同于采样率的采样率生成音频。 该文件将以编码器产生的音频格式创建。
 
 //        创建或打开文件的标志。 如果设置了kAudioFileFlags_EraseFile标志，则擦除现有的文件。 如果该标志没有设置，那么如果URL指向一个已经存在的文件，则该函数失败
-   // ExtAudioFileCreateWithURL(<#CFURLRef  _Nonnull inURL#>, <#AudioFileTypeID inFileType#>, <#const AudioStreamBasicDescription * _Nonnull inStreamDesc#>, <#const AudioChannelLayout * _Nullable inChannelLayout#>, <#UInt32 inFlags#>, <#ExtAudioFileRef  _Nullable * _Nonnull outExtAudioFile#>)
-    
+//    ExtAudioFileCreateWithURL(<#CFURLRef  _Nonnull inURL#>, <#AudioFileTypeID inFileType#>, <#const AudioStreamBasicDescription * _Nonnull inStreamDesc#>, <#const AudioChannelLayout * _Nullable inChannelLayout#>, <#UInt32 inFlags#>, <#ExtAudioFileRef  _Nullable * _Nonnull outExtAudioFile#>)
+
     
 #pragma mark- 打开文件
     ExtAudioFileRef audioFileRef;
     OSStatus status ;
     // 注意这里的打开只能去读数据  ，而不是去写的
-    status =  ExtAudioFileOpenURL(mp3UrlRef, &audioFileRef);
+//    status =  ExtAudioFileOpenURL(mp3UrlRef, &audioFileRef);
+//
+//    if ([self checkStatus:status WithTips:@"打开文件错误"]) {
+//        return;
+//    }
 
-    if ([self checkStatus:status WithTips:@"打开文件错误"]) {
+
+#pragma mark- 将audioFileId 转换成 扩展音频文件对象（音频上下文）
+   status = AudioFileOpenURL(mp3UrlRef, kAudioFileReadWritePermission, 0, &audioFileID);
+    if ([self checkStatus:status WithTips:@"AudioFileOpenURL 打开文件失败"]) {
         return;
     }
 
-   
-#pragma mark-  没扩展音频文件对象 转换成 扩展音频文件对象
-//   status = AudioFileOpenURL(mp3UrlRef, kAudioFileReadPermission, 0, &audioFileID);
-//    if ([self checkStatus:status WithTips:@"AudioFileOpenURL 打开文件失败"]) {
-//        return;
-//    }
-//
+
+
+
+
 ////     注意 如果使用了这个方法，你必须 在 关闭 audioFileRef 以后 再关闭 audioFileID
-//    status = ExtAudioFileWrapAudioFileID(audioFileID, YES, &audioFileRef);
+    status = ExtAudioFileWrapAudioFileID(audioFileID, YES, &audioFileRef);
 //
-//    if ([self checkStatus:status WithTips:@"转换失败"]) {
-//        return;
-//    }
+    if ([self checkStatus:status WithTips:@"转换失败"]) {
+        return;
+    }
+
+
+
 
 #pragma mark- 获取音频文件属性 和设置音频文件属性
 
@@ -158,8 +184,47 @@
     if ([self checkStatus:status WithTips:@"获取audioFileRef 相关联的 audioFile对象 失败"]) {
         return;
     }
-    
-#pragma mark- 读写音频数据
+
+    size = sizeof(dataFormat);
+
+
+    status = ExtAudioFileGetProperty(audioFileRef, kExtAudioFileProperty_FileDataFormat, &size, &dataFormat);
+
+    if ([self checkStatus:status WithTips:@"获取文件数据格式失败！"]) {
+        return;
+    }
+
+
+
+//    AudioStreamBasicDescription audioDescription ;
+//    audioDescription.mFormatFlags = kLinearPCMFormatFlagIsFloat | kLinearPCMFormatFlagIsNonInterleaved | kAudioFormatFlagsNativeEndian;
+//    audioDescription.mFormatID = kAudioFormatLinearPCM;
+//    audioDescription.mBitsPerChannel = sizeof (float) * 8;
+//    audioDescription.mChannelsPerFrame = dataFormat.mChannelsPerFrame;
+//    audioDescription.mBytesPerPacket =
+//    audioDescription.mBytesPerFrame = dataFormat.mChannelsPerFrame * (audioDescription.mBitsPerChannel/8);
+//    audioDescription.mFramesPerPacket = 1;
+//    audioDescription.mSampleRate = dataFormat.mSampleRate;
+//    size = sizeof(dataFormat);
+//    status = ExtAudioFileSetProperty(audioFileRef, kExtAudioFileProperty_ClientDataFormat, size, &dataFormat);
+//
+//    if ([self checkStatus:status WithTips:@"设置pcm格式失败"]) {
+//        return;
+//    }
+
+
+    /**/
+    //    status = ExtAudioFileSeek(audioFileRef, 1);
+    //
+    //    if ([self checkStatus:status WithTips:@"设置偏移量失败"]) {
+    //        return;
+    //    }
+
+
+
+
+
+#pragma mark- 读写音频数据属性
 
     /*
      如果扩展音频文件对象具有应用程序数据格式，则对象的转换器将文件数据转换为应用程序格式。
@@ -167,48 +232,69 @@
      这个函数只能在一个线程上运行。 如果您希望应用程序读取多个线程上的音频文件，请改为使用音频文件服务。
      */
 
-    UInt64 lengthOfFrames ;
+    
+    UInt32 lengthOfFrames = 0;
+    UInt64 lengthOfFramesTemp;
+#warning 注意： 虽然 ExtAudioFileGetProperty(ExtAudioFileRef inExtAudioFile, ExtAudioFilePropertyID  inPropertyID,UInt32 * ioPropertyDataSize,void *outPropertyData)
+//      虽然这里的ioProperDataSize 指明的是32位的但是对于  ExtaudioFileGetProperty 针对 kExtAudioFileProperty_FileLengthFrames 这个属性的时候，需要用UInt64的来去使用io数据
 
-    size = sizeof(lengthOfFrames);
-    status = ExtAudioFileGetProperty(audioFileRef, kExtAudioFileProperty_FileLengthFrames,&size , &lengthOfFrames);
+
+    size = sizeof(lengthOfFramesTemp);
+
+
+    status = ExtAudioFileGetProperty(audioFileRef, kExtAudioFileProperty_FileLengthFrames,&size , &lengthOfFramesTemp);
+
+    lengthOfFrames = (UInt32)lengthOfFramesTemp;
+
     if ([self checkStatus:status WithTips:@"获取音频帧数出错！"]) {
         return;
     }
- 
-    
+
     
     size = sizeof(dataFormat);
     status = ExtAudioFileGetProperty(audioFileRef, kExtAudioFileProperty_FileDataFormat, &size, &dataFormat);
 
+//    对于 kaudioFormatFlagIsNonInterleaved
+    /*
+     通常，当使用ASBD时，这些字段描述完整的布局
+                    本说明书所表示的缓冲区中的样本数据 -
+                    通常那些缓冲区由一个AudioBuffer表示
+                    包含在AudioBufferList中。
 
+                    但是，当ASBD具有kAudioFormatFlagIsNonInterleaved标志时，
+                    AudioBufferList具有不同的结构和语义。在这种情况下，ASBD
+                    字段将描述包含在其中的一个AudioBuffers的格式
+                    该列表，并且列表中的每个AudioBuffer被确定为具有单个（单声道）
+                    音频数据通道。然后，ASBD的mChannelsPerFrame将指示
+                    AudioBufferList中包含的AudioBuffers总数 -
+                    每个缓冲区包含一个通道。这主要用于
+                    此列表的AudioUnit（和AudioConverter）表示 - 并且不会被发现
+                    在这个结构的AudioHardware使用中。
+     */
+/*
+    创建音频缓冲区列表
+*/
     int numberOfBuffers = dataFormat.mFormatFlags & kAudioFormatFlagIsNonInterleaved ? dataFormat.mChannelsPerFrame : 1;
     AudioBufferList *audioBufferList = malloc(sizeof(audioBufferList) + sizeof(AudioBuffer)* (numberOfBuffers - 1));
 
+    // 
     audioBufferList->mNumberBuffers = numberOfBuffers;
-    
+    /*
+        注意这里如果穿件的缓冲区比较大的话 这里会有一些问题了
+     */
+    lengthOfFrames = 0;
+
+
+
     status =  ExtAudioFileRead(audioFileRef, &lengthOfFrames, audioBufferList);
+
+
 
     if ([self checkStatus:status WithTips:@"读取音频数据出错"]) {
         return;
     }
 
 
-
-//    UInt32 isWritableSize = sizeof(isWritable);
-        //  获取audiofile文件  属性所占的大小，以及该属性是否可以被设置  ()
-    status =  AudioFileGetPropertyInfo(audioFileID, kAudioFilePropertyFileFormat, &size, &isWritable);
-    
-
-    
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyFileFormat, &size, &audioFileType);
-    
-    
-    // 用于判断文件格式
-    if (audioFileType == kAudioFileAAC_ADTSType) {
-        NSLog(@"读取的是是  kAudioFileAAC_ADTSType  文件");
-    }
-    NSLog(@"%d===",kAudioFileMP3Type);
-    NSLog(@"isWritable == %d",isWritable);
 
     size = sizeof(dataFormat);
 //    （对于一些属性值是可变的时候，必须先调用AudioFileGetPropertyInfo 获取属性所占大小以后在调用AudioFileGetProperty）
@@ -223,159 +309,8 @@
     
 
 
-    //  ===========  文件读取      ==========
-    
-    // 读取多少字节数
-//    AudioFileReadBytes(<#AudioFileID  _Nonnull inAudioFile#>, <#Boolean inUseCache#>, <#SInt64 inStartingByte#>, <#UInt32 * _Nonnull ioNumBytes#>, <#void * _Nonnull outBuffer#>)
 
-    
-    // 对于 kAudioFilePropertyAudioDataPacketCount 和 kAudioFilePropertyAudioDataByteCount 这两个音频属性需要uint64数据来获取
-    UInt64 audioPacketCount;
-    size = sizeof(audioPacketCount);
-    
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyAudioDataPacketCount, &size, &audioPacketCount);
 
-    
-    UInt64 audioDataByteCount;
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyAudioDataByteCount, &size, &audioDataByteCount);
-    
-
-//    173053
-    if ([self checkStatus:status WithTips:@"读取数据包数量失败"]) {
-        return;
-    }
-    
-    // 需要读取的音频包的数量
-    UInt32 ioNumPackets = audioPacketCount;
-    
-#pragma mark-: 获取文件中最大数据包所占的字节数
-    UInt32 uperBound = 0;
-    size = sizeof(uperBound);
-    
-    // 获取理论上音频数据包的最大值
-    status =  AudioFileGetProperty(audioFileID, kAudioFilePropertyPacketSizeUpperBound, &size, &uperBound);
-    if ([self checkStatus:status WithTips:@"获取理论上数据包大小出错"]) {
-        return;
-    }
-    
-    UInt32 maxPacketSize = 0;
-    size = sizeof(maxPacketSize);
-    
-    // 获取实际中文件的最大值
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyMaximumPacketSize, &size, &maxPacketSize);
-    
-    // 经测试对于m4a文件 理论上每个数据包的最大值 和 实际中每个数据包的最大值都是 734 字节
-//    aac 文件 理论上每个数据包所占的字节数为 1536字节  实际上所占 为 537
-//    mp3 理论上应该有 1052字节  实际上有 523
-    
-    if ([self checkStatus:status WithTips:@"获取最大包大小出错"]) {
-        return;
-    }
-    
-
-   
-#pragma mark- :读取音频包数据 这里是读取了所有的的帧所占的字节数
-    UInt32 ioNumBytes = ioNumPackets * maxPacketSize;
-    
-    AudioStreamPacketDescription *outPacketDescriptions = NULL;
-    UInt32 descSize = sizeof(AudioStreamPacketDescription) *ioNumPackets;
-    outPacketDescriptions = (AudioStreamPacketDescription *)malloc(descSize);
-    SInt64 startIndexPacket = 0;  // 这里需要实例化
-    void *outBuffer = (void *)malloc(ioNumBytes);
-    void *inBuffer  = NULL;
-
-    //441.mp3总的大小为 6055184
-    status =  AudioFileReadPacketData(audioFileID, NO, &ioNumBytes, outPacketDescriptions, startIndexPacket, &ioNumPackets, outBuffer);
-  //  总结： audioFileReadPacketData 在读取方面进行了优化，输出的字节数会小于等于 输入的自己数，当然这样说就是废话，优化的结果就是  输出的字节数是 小于等于输入字节数所形成的整数帧的总大小，也就是说最后读取的数据都是完整的帧数
-//    memcpy(void *__dst, <#const void *__src#>, <#size_t __n#>)]
-    
-    NSData *data = [[NSData alloc] initWithBytes:outBuffer length:ioNumBytes];
-    
-    if (status == kAudioFileEndOfFileError) {
-    
-        NSLog(@"读取的数量超过文件结尾了");
-    }
-    
-    if ([self checkStatus:status WithTips:@"读取数据出错"]) {
-        return;
-    }
-
-    // 已经被废弃了
-    // AudioFileReadPackets(<#AudioFileID  _Nonnull inAudioFile#>, <#Boolean inUseCache#>, <#UInt32 * _Nonnull outNumBytes#>, <#AudioStreamPacketDescription * _Nullable outPacketDescriptions#>, <#SInt64 inStartingPacket#>, <#UInt32 * _Nonnull ioNumPackets#>, <#void * _Nullable outBuffer#>)
-    
-#pragma mark-:  ================ 获取音频包列表信息的时候对于aac文件和mp3文件会获取失败   =======================
-    
-//    AudioFilePacketTableInfo
-//    他包含有关文件中有效帧数以及开始和结束位置的信息。
-//    有些数据格式可能包含内容不完全有效的数据包，但表示启动或剩余
-//    不打算播放的帧。 例如，具有100个AAC包的文件名义上是1024×100 = 102400帧
-//    数据的。 然而，第2112帧可能是启动帧，可能会有一些
-//    添加的余数帧的数量，以填充1024帧的完整数据包。 启动和剩余帧应该是
-//    丢弃。 文件中的数据包总数与每个数据包的帧数相乘（或计算每个数据包的帧数
-//    单独针对每个分组格式的可变帧）减去mPrimingFrames，减去mRemainderFrame，应该
-//    等于mNumberValidFrames
-    AudioFilePacketTableInfo packTableInfo;
-    size = sizeof(packTableInfo);
-    
-    /*
-        注意对 aac 文件进行 kAudioFilePropertyPacketTableInfo 获取的时候会出错误，
-        可能的原因猜测： aac 不是apple 默认的存储模式，所以 默认情况下对他获取，有问题
-     */
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyPacketTableInfo, &size, &packTableInfo);
-    if (status != noErr) {
-        NSLog(@"对于aac文件进行有效帧获取会出错");
-        size = 0;
-    }
-   
-
-    
-#pragma mark- AudioFramePacketTranslation  帧数和数据包进行转换  可以用于计算原始帧的总长度
-//    AudioFramePacketTranslation
-//     是用于pack和帧进行转换的的 500736
-    
-    AudioFramePacketTranslation packTranslation;
-    packTranslation.mPacket = audioPacketCount;
-    size = sizeof(packTranslation);
-    size = 0;
-    AudioFileGetPropertyInfo(audioFileID, kAudioFilePropertyPacketToFrame, &size, &isWritable);
-    
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyPacketToFrame, &size, &packTranslation);
-    
-    if ([self checkStatus:status WithTips:@"帧数和数据包进行转换失败"]) {
-
-        return;
-    }
-
-    
-#pragma mark- :获取 文件指针偏移量
-    
-    SInt64 offSet;
-    size = sizeof(offSet);
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyDataOffset, &size, &offSet);
-    
-    if ([self checkStatus:status WithTips:@"获取偏移量失败"]) {
-        return;
-    }
-    
-    
-#pragma mark-: byte 和 音频数据包进行转化 注意 对于m4a 文件会出错误，mp3文件和aac文件的话不会出错误
-
-    AudioBytePacketTranslation bytePackTranslation;
-    bytePackTranslation.mPacket = audioPacketCount ;
-//    bytePackTranslation.mByteOffsetInPacket= 0;
-//    bytePackTranslation.mFlags = kBytePacketTranslationFlag_IsEstimate;
-    size = sizeof(bytePackTranslation);
-    status = AudioFileGetProperty(audioFileID, kAudioFilePropertyPacketToByte, &size, &bytePackTranslation);
-    if ([self checkStatus:status WithTips:@"byte 和 音频数据包进行转化"]) {
-        NSLog(@"对于m4a 文件会出错误，mp3文件和aac文件的话不会出错误");
-    }
-//
-    
-    
-//     写音频数据
-//     AudioFileWritePackets(<#AudioFileID  _Nonnull inAudioFile#>, <#Boolean inUseCache#>, <#UInt32 inNumBytes#>, <#const AudioStreamPacketDescription * _Nullable inPacketDescriptions#>, <#SInt64 inStartingPacket#>, <#UInt32 * _Nonnull ioNumPackets#>, <#const void * _Nonnull inBuffer#>)
-    
-    
     
 #pragma mark:- 关闭文件
   
@@ -502,7 +437,6 @@ packet  帧数的集合，一个packet 包含多少个帧由文件格式决定�
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
-
 
 
 
