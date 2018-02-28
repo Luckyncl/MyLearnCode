@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		18630188200608C50077104B /* CLAudioFileServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 18630187200608C50077104B /* CLAudioFileServices.m */; };
+		1865AEE82046409B00E49063 /* AudioFileStreamServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1865AEE72046409B00E49063 /* AudioFileStreamServicesDemo.m */; };
+		1865AEED2046958C00E49063 /* AudioConverterServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */; };
 		1889B9A21FFDD1E500DF6B14 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1889B9A11FFDD1E500DF6B14 /* AppDelegate.m */; };
 		1889B9A51FFDD1E500DF6B14 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1889B9A41FFDD1E500DF6B14 /* ViewController.m */; };
 		1889B9A81FFDD1E500DF6B14 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1889B9A61FFDD1E500DF6B14 /* Main.storyboard */; };
@@ -42,6 +44,11 @@
 /* Begin PBXFileReference section */
 		18630186200608C50077104B /* CLAudioFileServices.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CLAudioFileServices.h; sourceTree = "<group>"; };
 		18630187200608C50077104B /* CLAudioFileServices.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CLAudioFileServices.m; sourceTree = "<group>"; };
+		1865AEE62046409B00E49063 /* AudioFileStreamServicesDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileStreamServicesDemo.h; sourceTree = "<group>"; };
+		1865AEE72046409B00E49063 /* AudioFileStreamServicesDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileStreamServicesDemo.m; sourceTree = "<group>"; };
+		1865AEE920465C7E00E49063 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		1865AEEB2046958C00E49063 /* AudioConverterServicesDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioConverterServicesDemo.h; sourceTree = "<group>"; };
+		1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioConverterServicesDemo.m; sourceTree = "<group>"; };
 		1889B99D1FFDD1E500DF6B14 /* AudioToolboxTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioToolboxTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1889B9A01FFDD1E500DF6B14 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1889B9A11FFDD1E500DF6B14 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -129,6 +136,11 @@
 				C7B8C5992026C85000C778B1 /* AudioFileServicesDemo.m */,
 				C7B8C59B20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.h */,
 				C7B8C59C20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.m */,
+				1865AEE62046409B00E49063 /* AudioFileStreamServicesDemo.h */,
+				1865AEE72046409B00E49063 /* AudioFileStreamServicesDemo.m */,
+				1865AEEB2046958C00E49063 /* AudioConverterServicesDemo.h */,
+				1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */,
+				1865AEE920465C7E00E49063 /* README.md */,
 			);
 			path = AudioFileServices;
 			sourceTree = "<group>";
@@ -213,12 +225,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				1889B9A51FFDD1E500DF6B14 /* ViewController.m in Sources */,
+				1865AEED2046958C00E49063 /* AudioConverterServicesDemo.m in Sources */,
 				C7B8C59A2026C85000C778B1 /* AudioFileServicesDemo.m in Sources */,
 				18D905562008C1950001D698 /* NSString+encode.m in Sources */,
 				18630188200608C50077104B /* CLAudioFileServices.m in Sources */,
 				C7B8C59D20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.m in Sources */,
 				1889B9B01FFDD1E500DF6B14 /* main.m in Sources */,
 				1889B9A21FFDD1E500DF6B14 /* AppDelegate.m in Sources */,
+				1865AEE82046409B00E49063 /* AudioFileStreamServicesDemo.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

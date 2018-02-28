@@ -236,7 +236,7 @@
     AudioStreamPacketDescription *outPacketDescriptions = NULL;
     UInt32 descSize = sizeof(AudioStreamPacketDescription) *ioNumPackets;
     outPacketDescriptions = (AudioStreamPacketDescription *)malloc(descSize);
-    SInt64 startIndexPacket = 0;  // 这里需要实例化
+    SInt64 startIndexPacket = 1;  // 这里需要实例化
     void *outBuffer = (void *)malloc(ioNumBytes);
     void *inBuffer  = NULL;
     
@@ -302,10 +302,10 @@
     
 #pragma mark- :获取 文件指针偏移量
     
-    SInt64 offSet;
+    SInt64 offSet = 0;
     size = sizeof(offSet);
     status = AudioFileGetProperty(audioFileID, kAudioFilePropertyDataOffset, &size, &offSet);
-    
+    NSLog(@"便宜量 == %ld",offSet);
     if ([self checkStatus:status WithTips:@"获取偏移量失败"]) {
         return;
     }

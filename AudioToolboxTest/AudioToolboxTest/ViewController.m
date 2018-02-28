@@ -7,14 +7,23 @@
 //     http://www.cocoachina.com/ios/20170721/19969.html
 // https://developer.apple.com/documentation/audiotoolbox/audio_file_services?language=objc
 // http://www.cocoachina.com/industry/20140722/9216.html
-// http://yoferzhang.com/post/20160811OCMemoryManagement/
+
+
+
+/*
+// http://yoferzhang.com/post/20160811OCMemoryManagement/   内存管理
+ Objective-C运行时编程指南（Objective-C Runtime Programming Guide） https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html
+ */
+
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "NSString+encode.h"
+#import "AudioFileServicesDemo.h"
 @interface ViewController ()
 {
     AudioStreamBasicDescription dataFormat;
     AudioFileID audioFileID;
+    AudioConverterRef converterRef;
 }
 @end
 
@@ -26,12 +35,105 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
 
-/*
-   ExtendedAudioFile提供高级音频文件访问，建立
-   在AudioFile和AudioConverter API集之上。 它提供了一个单一的
-   统一接口来读写编码和未编码的文件。  它比audiofileServices会更加常用一些 并且更加的方便
-*/
-   
+
+    /*
+     概述
+     音频转换器对象在各种线性PCM音频格式之间转换。 他们还可以在线性PCM和压缩格式之间进行转换。 支持的转换包括以下内容：
+     PCM位深度
+
+     PCM采样率
+
+     PCM浮点数来自PCM整数
+
+     PCM交错去往和去交错的PCM
+
+     PCM压缩格式
+     */
+
+    OSStatus status ;
+
+
+
+
+    AudioStreamBasicDescription pcmAsbd = {0};
+    pcmAsbd.mSampleRate = 441000;
+    pcmAsbd.mFormatID = kAudioFormatLinearPCM;
+    pcmAsbd.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagsNativeEndian | kAudioFormatFlagIsPacked;
+    pcmAsbd.mChannelsPerFrame = 2;  // 双声道
+    pcmAsbd.mFramesPerPacket = 1;
+    pcmAsbd.mBitsPerChannel = 16;
+    pcmAsbd.mBytesPerFrame = pcmAsbd.mBitsPerChannel / 8 * pcmAsbd.mChannelsPerFrame;
+    pcmAsbd.mBytesPerPacket = pcmAsbd.mBytesPerFrame * pcmAsbd.mFramesPerPacket;
+
+
+
+    /*   这里设置aac的 AudioStreamBasicDescription      */
+    AudioStreamBasicDescription targetAsbd ;
+    memset(&targetAsbd, 0, sizeof(targetAsbd));
+    targetAsbd.mSampleRate       = 441000; // 采样率保持一致
+    targetAsbd.mFormatID         = kAudioFormatMPEG4AAC;    // AAC编码 kAudioFormatMPEG4AAC kAudioFormatMPEG4AAC_HE_V2
+    targetAsbd.mChannelsPerFrame = 2;
+    targetAsbd.mFramesPerPacket  = 1024;                    // AAC一帧是1024个字节
+
+    const OSType subtype = kAudioFormatMPEG4AAC;
+    AudioClassDescription requestedCodecs[2] = {
+        {
+            kAudioEncoderComponentType,
+            subtype,
+            kAppleSoftwareAudioCodecManufacturer
+        },
+        {
+            kAudioEncoderComponentType,
+            subtype,
+            kAppleHardwareAudioCodecManufacturer
+        }
+    };
+    status = AudioConverterNewSpecific(&pcmAsbd, &targetAsbd, 2, requestedCodecs, &converterRef);
+
+
+#pragma mark - 根据指定的编解码方式 创建 音频转换器
+
+    //      AudioConverterNewSpecific(&pcmAsbd, &targetAsbd, <#UInt32 inNumberClassDescriptions#>, <#const AudioClassDescription * _Nonnull inClassDescriptions#>, <#AudioConverterRef  _Nullable * _Nonnull outAudioConverter#>)
+
+    //  AudioClassDescription 用于描述 此结构用于描述系统上安装的编解码器
+
+
+#pragma mark - 根据音频格式创建 音频转换器
+     status = AudioConverterNew(&pcmAsbd, &targetAsbd, &converterRef);
+
+    /*
+     ****  重要 ： 对于一对pcm 格式进行转换的时候，支持
+            1、当输入和输出格式mChannelsPerFrame字段不匹配时，添加和删除通道。 通道也可以使用kAudioConverterChannelMap属性重新排序和删除。
+            2、采样率转换。
+            3、当输入和输出格式（mFormatFlags＆kAudioFormatFlagIsNonInterleaved）值不匹配时交织和解交织
+
+    ** 支持线性PCM和压缩格式之间的编码和解码。 音频格式服务（AudioToolbox / AudioFormat.h）中的函数返回有关系统支持的格式的信息。 使用编解码器时，您可以使用任何支持的PCM格式。 转换器对象在您的PCM格式与编解码器创建或使用的格式之间执行任何必要的额外转换。
+     */
+
+
+
+#pragma mark -  重置音频转换器对象，清除并清空其缓冲区。
+    status = AudioConverterReset(converterRef);
+
+
+#pragma mark - 将pcm转换成另一种pcm （有局限）
+
+    /*
+          注意： 此功能用于将一种线性PCM格式转换为另一种格式的特殊情况。 此功能无法执行采样率转换，不能用于转换为大多数压缩格式或从大多数压缩格式转换而来。 要执行这些类型的转换，请改用AudioConverterFillComplexBuffer。
+     */
+//    AudioConverterConvertBuffer(converterRef, <#UInt32 inInputDataSize#>, <#const void * _Nonnull inInputData#>, <#UInt32 * _Nonnull ioOutputDataSize#>, <#void * _Nonnull outOutputData#>)
+
+
+#pragma mark - 不同格式间的转换
+
+//    AudioConverterFillComplexBuffer(converterRef, <#AudioConverterComplexInputDataProc  _Nonnull inInputDataProc#>, <#void * _Nullable inInputDataProcUserData#>, <#UInt32 * _Nonnull ioOutputDataPacketSize#>, <#AudioBufferList * _Nonnull outOutputData#>, <#AudioStreamPacketDescription * _Nullable outPacketDescription#>)
+
+
+
+
+
+
+
 
 //  测试音频.m4a      1538048 有效帧数  一共所有的帧数1541120
 //   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"441" ofType:@"mp3"];
@@ -76,7 +178,7 @@
     
 #pragma mark- 打开文件
     ExtAudioFileRef audioFileRef;
-    OSStatus status ;
+
     // 注意这里的打开只能去读数据  ，而不是去写的
 //    status =  ExtAudioFileOpenURL(mp3UrlRef, &audioFileRef);
 //
@@ -195,6 +297,16 @@
     }
 
 
+//    status =   ExtAudioFileSeek(audioFileRef, 1);
+//    if ([self checkStatus:status WithTips:@"seek失败!"]) {
+//        return;
+//    }
+
+
+
+
+
+
 
 //    AudioStreamBasicDescription audioDescription ;
 //    audioDescription.mFormatFlags = kLinearPCMFormatFlagIsFloat | kLinearPCMFormatFlagIsNonInterleaved | kAudioFormatFlagsNativeEndian;
@@ -282,7 +394,6 @@
     /*
         注意这里如果穿件的缓冲区比较大的话 这里会有一些问题了
      */
-    lengthOfFrames = 0;
 
 
 
@@ -293,6 +404,7 @@
     if ([self checkStatus:status WithTips:@"读取音频数据出错"]) {
         return;
     }
+
 
 
 
@@ -431,11 +543,46 @@ packet  帧数的集合，一个packet 包含多少个帧由文件格式决定�
 
 
 
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    AudioFileServicesDemo *demmo = [AudioFileServicesDemo new];
+    [self presentViewController:demmo animated:YES completion:^{
+        
+    }];
+}
 
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+
+
+    /*
+     char *aacBuf;
+
+     if(!aacBuf){
+     aacBuf = malloc(inBufferList.mBuffers[0].mDataByteSize);
+     }
+
+     // 初始化一个输出缓冲列表
+     AudioBufferList outBufferList;
+     outBufferList.mNumberBuffers              = 1;
+     outBufferList.mBuffers[0].mNumberChannels = inBufferList.mBuffers[0].mNumberChannels;
+     outBufferList.mBuffers[0].mDataByteSize   = inBufferList.mBuffers[0].mDataByteSize; // 设置缓冲区大小
+     outBufferList.mBuffers[0].mData           = aacBuf; // 设置AAC缓冲区
+     UInt32 outputDataPacketSize               = 1;
+     if (AudioConverterFillComplexBuffer(m_converter, inputDataProc, &inBufferList, &outputDataPacketSize, &outBufferList, NULL) != noErr){
+     return;
+     }
+     AudioFrame *audioFrame = [AudioFrame new];
+     audioFrame.timestamp = timeStamp;
+     audioFrame.data = [NSData dataWithBytes:aacBuf length:outBufferList.mBuffers[0].mDataByteSize];
+
+     char exeData[2];
+     exeData[0] = _configuration.asc[0];
+     exeData[1] = _configuration.asc[1];
+     audioFrame.audioInfo =[NSData dataWithBytes:exeData length:2];
+     */
 }
 
 
