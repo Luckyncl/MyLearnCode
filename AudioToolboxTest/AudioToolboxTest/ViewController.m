@@ -8,12 +8,17 @@
 // https://developer.apple.com/documentation/audiotoolbox/audio_file_services?language=objc
 // http://www.cocoachina.com/industry/20140722/9216.html
 
+//  http://www.code4app.com/thread-27323-1-1.html
 
 
 /*
 // http://yoferzhang.com/post/20160811OCMemoryManagement/   内存管理
  Objective-C运行时编程指南（Objective-C Runtime Programming Guide） https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ObjCRuntimeGuide/Introduction/Introduction.html
  */
+
+
+
+
 
 #import "ViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
@@ -23,6 +28,9 @@
 {
     AudioStreamBasicDescription dataFormat;
     AudioFileID audioFileID;
+
+    AudioQueueRef audioQueueRef;  // 音频队列上下文
+
 }
 @end
 
@@ -39,24 +47,7 @@
     OSStatus status ;
 
 
-    /*
-     音频队列是用于录制或播放音频的软件对象。 一个音频队列完成以下工作：
-
-     1、连接到音频硬件
-
-     2、管理内存
-
-     3、根据需要使用编解码器来压缩音频格式
-
-     4、调解播放或录制
-     */
-
-
-
-
-
-
-//  测试音频.m4a      1538048 有效帧数  一共所有的帧数1541120
+//  测试音频.m4a      ssssssssss1538048 有效帧数  一共所有的帧数1541120
 //   NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"441" ofType:@"mp3"];
 
    NSString *mp3Path = [[NSBundle mainBundle] pathForResource:@"测试音频" ofType:@"aac"];

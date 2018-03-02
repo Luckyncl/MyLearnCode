@@ -24,6 +24,7 @@
 		18D905562008C1950001D698 /* NSString+encode.m in Sources */ = {isa = PBXBuildFile; fileRef = 18D905552008C1950001D698 /* NSString+encode.m */; };
 		18D905582008C3F00001D698 /* 测试音频.m4a in Resources */ = {isa = PBXBuildFile; fileRef = 18D905572008C3F00001D698 /* 测试音频.m4a */; };
 		18D9055A2008C3FA0001D698 /* 测试音频.aac in Resources */ = {isa = PBXBuildFile; fileRef = 18D905592008C3FA0001D698 /* 测试音频.aac */; };
+		18DEED3B20494A9B00FA95EA /* AudioQueueServicesAPI.m in Sources */ = {isa = PBXBuildFile; fileRef = 18DEED3A20494A9B00FA95EA /* AudioQueueServicesAPI.m */; };
 		C7B8C59A2026C85000C778B1 /* AudioFileServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B8C5992026C85000C778B1 /* AudioFileServicesDemo.m */; };
 		C7B8C59D20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = C7B8C59C20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.m */; };
 /* End PBXBuildFile section */
@@ -68,6 +69,8 @@
 		18D905552008C1950001D698 /* NSString+encode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+encode.m"; sourceTree = "<group>"; };
 		18D905572008C3F00001D698 /* 测试音频.m4a */ = {isa = PBXFileReference; lastKnownFileType = file; path = "测试音频.m4a"; sourceTree = "<group>"; };
 		18D905592008C3FA0001D698 /* 测试音频.aac */ = {isa = PBXFileReference; lastKnownFileType = file; path = "测试音频.aac"; sourceTree = "<group>"; };
+		18DEED3920494A9B00FA95EA /* AudioQueueServicesAPI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioQueueServicesAPI.h; sourceTree = "<group>"; };
+		18DEED3A20494A9B00FA95EA /* AudioQueueServicesAPI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioQueueServicesAPI.m; sourceTree = "<group>"; };
 		C7B8C5982026C85000C778B1 /* AudioFileServicesDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioFileServicesDemo.h; sourceTree = "<group>"; };
 		C7B8C5992026C85000C778B1 /* AudioFileServicesDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioFileServicesDemo.m; sourceTree = "<group>"; };
 		C7B8C59B20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ExtendedAudioFileServicesDemo.h; sourceTree = "<group>"; };
@@ -140,6 +143,8 @@
 				1865AEE72046409B00E49063 /* AudioFileStreamServicesDemo.m */,
 				1865AEEB2046958C00E49063 /* AudioConverterServicesDemo.h */,
 				1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */,
+				18DEED3920494A9B00FA95EA /* AudioQueueServicesAPI.h */,
+				18DEED3A20494A9B00FA95EA /* AudioQueueServicesAPI.m */,
 				1865AEE920465C7E00E49063 /* README.md */,
 			);
 			path = AudioFileServices;
@@ -229,6 +234,7 @@
 				C7B8C59A2026C85000C778B1 /* AudioFileServicesDemo.m in Sources */,
 				18D905562008C1950001D698 /* NSString+encode.m in Sources */,
 				18630188200608C50077104B /* CLAudioFileServices.m in Sources */,
+				18DEED3B20494A9B00FA95EA /* AudioQueueServicesAPI.m in Sources */,
 				C7B8C59D20273FDB00C778B1 /* ExtendedAudioFileServicesDemo.m in Sources */,
 				1889B9B01FFDD1E500DF6B14 /* main.m in Sources */,
 				1889B9A21FFDD1E500DF6B14 /* AppDelegate.m in Sources */,
