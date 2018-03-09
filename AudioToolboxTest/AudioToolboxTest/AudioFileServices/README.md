@@ -10,10 +10,10 @@ https://github.com/ChengyangLi/XDXPCMToAACDemo
 <!--AVFoundation编程指南-->
 https://developer.apple.com/library/content/documentation/AudioVideo/Conceptual/AVFoundationPG/Articles/00_Introduction.html
 
-<!-- 音频队列编程指南-->
+<!-- AudioQueue编程指南-->
 https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/AudioQueueProgrammingGuide/Introduction/Introduction.html
 
-
+<!--     audioUnit编程指南   -->
 //https://developer.apple.com/library/content/documentation/MusicAudio/Conceptual/AudioUnitProgrammingGuide/Introduction/Introduction.html
 
 

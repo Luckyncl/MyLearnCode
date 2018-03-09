@@ -10,8 +10,10 @@
 		18630188200608C50077104B /* CLAudioFileServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 18630187200608C50077104B /* CLAudioFileServices.m */; };
 		1865AEE82046409B00E49063 /* AudioFileStreamServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1865AEE72046409B00E49063 /* AudioFileStreamServicesDemo.m */; };
 		1865AEED2046958C00E49063 /* AudioConverterServicesDemo.m in Sources */ = {isa = PBXBuildFile; fileRef = 1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */; };
+		1871C8C8205122AE0065C79A /* AudioQueueTool.m in Sources */ = {isa = PBXBuildFile; fileRef = 1871C8C7205122AE0065C79A /* AudioQueueTool.m */; };
+		1871C8CB205129690065C79A /* CheckStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 1871C8CA205129690065C79A /* CheckStatus.m */; };
 		1889B9A21FFDD1E500DF6B14 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1889B9A11FFDD1E500DF6B14 /* AppDelegate.m */; };
-		1889B9A51FFDD1E500DF6B14 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1889B9A41FFDD1E500DF6B14 /* ViewController.m */; };
+		1889B9A51FFDD1E500DF6B14 /* ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 1889B9A41FFDD1E500DF6B14 /* ViewController.mm */; };
 		1889B9A81FFDD1E500DF6B14 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1889B9A61FFDD1E500DF6B14 /* Main.storyboard */; };
 		1889B9AA1FFDD1E500DF6B14 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1889B9A91FFDD1E500DF6B14 /* Assets.xcassets */; };
 		1889B9AD1FFDD1E500DF6B14 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1889B9AB1FFDD1E500DF6B14 /* LaunchScreen.storyboard */; };
@@ -50,11 +52,15 @@
 		1865AEE920465C7E00E49063 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		1865AEEB2046958C00E49063 /* AudioConverterServicesDemo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioConverterServicesDemo.h; sourceTree = "<group>"; };
 		1865AEEC2046958C00E49063 /* AudioConverterServicesDemo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioConverterServicesDemo.m; sourceTree = "<group>"; };
+		1871C8C6205122AE0065C79A /* AudioQueueTool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioQueueTool.h; sourceTree = "<group>"; };
+		1871C8C7205122AE0065C79A /* AudioQueueTool.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AudioQueueTool.m; sourceTree = "<group>"; };
+		1871C8C9205129690065C79A /* CheckStatus.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CheckStatus.h; sourceTree = "<group>"; };
+		1871C8CA205129690065C79A /* CheckStatus.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CheckStatus.m; sourceTree = "<group>"; };
 		1889B99D1FFDD1E500DF6B14 /* AudioToolboxTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AudioToolboxTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1889B9A01FFDD1E500DF6B14 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		1889B9A11FFDD1E500DF6B14 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		1889B9A31FFDD1E500DF6B14 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		1889B9A41FFDD1E500DF6B14 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		1889B9A41FFDD1E500DF6B14 /* ViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewController.mm; sourceTree = "<group>"; };
 		1889B9A71FFDD1E500DF6B14 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		1889B9A91FFDD1E500DF6B14 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1889B9AC1FFDD1E500DF6B14 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -88,6 +94,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1871C8C5205122890065C79A /* AudioQueueDemo */ = {
+			isa = PBXGroup;
+			children = (
+				1871C8C6205122AE0065C79A /* AudioQueueTool.h */,
+				1871C8C7205122AE0065C79A /* AudioQueueTool.m */,
+			);
+			path = AudioQueueDemo;
+			sourceTree = "<group>";
+		};
 		1889B9941FFDD1E500DF6B14 = {
 			isa = PBXGroup;
 			children = (
@@ -107,11 +122,14 @@
 		1889B99F1FFDD1E500DF6B14 /* AudioToolboxTest */ = {
 			isa = PBXGroup;
 			children = (
+				1871C8C5205122890065C79A /* AudioQueueDemo */,
 				C7B8C5972026C81900C778B1 /* AudioFileServices */,
 				1889B9A01FFDD1E500DF6B14 /* AppDelegate.h */,
 				1889B9A11FFDD1E500DF6B14 /* AppDelegate.m */,
 				1889B9A31FFDD1E500DF6B14 /* ViewController.h */,
-				1889B9A41FFDD1E500DF6B14 /* ViewController.m */,
+				1889B9A41FFDD1E500DF6B14 /* ViewController.mm */,
+				1871C8C9205129690065C79A /* CheckStatus.h */,
+				1871C8CA205129690065C79A /* CheckStatus.m */,
 				18D905542008C1950001D698 /* NSString+encode.h */,
 				18D905552008C1950001D698 /* NSString+encode.m */,
 				18D905522008BEA80001D698 /* yueermingliang.mp3 */,
@@ -229,9 +247,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1889B9A51FFDD1E500DF6B14 /* ViewController.m in Sources */,
+				1889B9A51FFDD1E500DF6B14 /* ViewController.mm in Sources */,
 				1865AEED2046958C00E49063 /* AudioConverterServicesDemo.m in Sources */,
+				1871C8CB205129690065C79A /* CheckStatus.m in Sources */,
 				C7B8C59A2026C85000C778B1 /* AudioFileServicesDemo.m in Sources */,
+				1871C8C8205122AE0065C79A /* AudioQueueTool.m in Sources */,
 				18D905562008C1950001D698 /* NSString+encode.m in Sources */,
 				18630188200608C50077104B /* CLAudioFileServices.m in Sources */,
 				18DEED3B20494A9B00FA95EA /* AudioQueueServicesAPI.m in Sources */,
